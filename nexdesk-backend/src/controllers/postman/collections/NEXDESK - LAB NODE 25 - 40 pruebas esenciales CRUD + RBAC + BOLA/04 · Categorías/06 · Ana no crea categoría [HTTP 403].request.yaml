@@ -1,0 +1,25 @@
+$kind: http-request
+description: "Caso original LAB26 #50. Esperado HTTP 403. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/categorias"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "nombre": "No autorizada",
+      "descripcion": "Prueba RBAC"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAna}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 403", () => pm.response.to.have.status(403));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+      pm.test("Sin permisos",()=>pm.expect(data.error).to.be.a("string"));
+    language: text/javascript
+order: 6000

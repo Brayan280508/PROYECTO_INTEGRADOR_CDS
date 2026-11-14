@@ -1,0 +1,13 @@
+/* Estilos complementarios para SOLVIX ("Soluciones rápidas y eficientes") */
+.spin {
+  animation: solvix-spin 1s linear infinite;
+}
+
+@keyframes solvix-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

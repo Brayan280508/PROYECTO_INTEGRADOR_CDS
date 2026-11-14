@@ -1,0 +1,25 @@
+$kind: http-request
+description: "Caso original LAB26 #06. Los tokens son secretos. Los usuarios deben existir en Supabase Auth y estar vinculados a public.usuarios."
+url: "{{baseUrl}}/api/auth/login"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "email": "{{emailAna}}",
+      "password": "{{passwordAna}}"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: eyJhbGciOiJFUzI1NiIsImtpZCI6IjQ1ZTlkZGM5LTU2M2ItNDM0ZC05MWE1LTE3OTQ3MGZlOTM3MyIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJodHRwczovL2Z1eHR6bmVia2h4bXFsZ29nbWNsLnN1cGFiYXNlLmNvL2F1dGgvdjEiLCJzdWIiOiIyMTM5MWZkZC0yMDkwLTRmNGItYWUwYi00NTY1OWZmM2RkNGQiLCJhdWQiOiJhdXRoZW50aWNhdGVkIiwiZXhwIjoxNzk0NTAzNjc0LCJpYXQiOjE3OTQ1MDAwNzQsImVtYWlsIjoiYW5hQGV4YW1wbGUuY29tIiwicGhvbmUiOiIiLCJhcHBfbWV0YWRhdGEiOnsicHJvdmlkZXIiOiJlbWFpbCIsInByb3ZpZGVycyI6WyJlbWFpbCJdfSwidXNlcl9tZXRhZGF0YSI6eyJlbWFpbF92ZXJpZmllZCI6dHJ1ZX0sInJvbGUiOiJhdXRoZW50aWNhdGVkIiwiYWFsIjoiYWFsMSIsImFtciI6W3sibWV0aG9kIjoicGFzc3dvcmQiLCJ0aW1lc3RhbXAiOjE3OTQ1MDAwNzR9XSwic2Vzc2lvbl9pZCI6IjUwMWRkMzRlLWE4ZGMtNGE1ZS1hYTIxLTFjNGQyMGYzYWYyNSIsImlzX2Fub255bW91cyI6ZmFsc2V9.C_MA7wPFATHOh_7YPUO9gTOwGRSa6-mFnCZpV_8z4nmIT-TBKrks3idktYTMZKg7Rpphvp-hzEz9D85tXiGp-A
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 200", () => pm.response.to.have.status(200));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+      if (pm.response.code >= 200 && pm.response.code < 300) { const v = data.access_token; if(v !== undefined && v !== null) pm.collectionVariables.set("tokenAna", String(v)); }
+    language: text/javascript
+order: 5000

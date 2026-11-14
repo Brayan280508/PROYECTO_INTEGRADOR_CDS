@@ -1,0 +1,23 @@
+$kind: http-request
+description: "Caso original LAB26 #59. Esperado HTTP 200. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/tickets/{{ticketId}}/estado"
+method: PATCH
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "estado": "en_proceso"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenSofia}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 200", () => pm.response.to.have.status(200));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+    language: text/javascript
+order: 5000

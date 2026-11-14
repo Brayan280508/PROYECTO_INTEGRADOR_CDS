@@ -1,0 +1,821 @@
+/* ==========================================================================
+   SOLVIX DESIGN SYSTEM ("Soluciones rápidas y eficientes")
+   Modern SaaS Help Desk UI - Light & Dark Mode
+   ========================================================================== */
+
+:root {
+  --font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  
+  /* Light Mode Palette */
+  --solvix-primary: #2563EB;
+  --solvix-primary-hover: #1D4ED8;
+  --solvix-primary-subtle: #EFF6FF;
+  --solvix-primary-border: #BFDBFE;
+
+  --solvix-accent: #06B6D4;
+  --solvix-accent-subtle: #ECFEFF;
+
+  --solvix-success: #10B981;
+  --solvix-success-subtle: #ECFDF5;
+  --solvix-success-border: #A7F3D0;
+
+  --solvix-warning: #F59E0B;
+  --solvix-warning-subtle: #FFFBEB;
+  --solvix-warning-border: #FDE68A;
+
+  --solvix-danger: #EF4444;
+  --solvix-danger-subtle: #FEF2F2;
+  --solvix-danger-border: #FECACA;
+
+  --solvix-info: #0EA5E9;
+  --solvix-info-subtle: #F0F9FF;
+  --solvix-info-border: #BAE6FD;
+
+  --solvix-bg: #F8FAFC;
+  --solvix-surface: #FFFFFF;
+  --solvix-surface-elevated: #FFFFFF;
+  --solvix-border: #E2E8F0;
+  --solvix-border-subtle: #F1F5F9;
+
+  --solvix-text-main: #0F172A;
+  --solvix-text-muted: #64748B;
+  --solvix-text-dim: #94A3B8;
+
+  --solvix-sidebar-bg: #0B132B;
+  --solvix-sidebar-hover: rgba(255, 255, 255, 0.08);
+  --solvix-sidebar-border: rgba(255, 255, 255, 0.08);
+
+  --solvix-shadow-sm: 0 1px 3px rgba(15, 23, 42, 0.06);
+  --solvix-shadow-md: 0 4px 12px rgba(15, 23, 42, 0.08);
+  --solvix-shadow-lg: 0 12px 28px rgba(15, 23, 42, 0.12);
+
+  /* Bootstrap 5.3 Light Theme Overrides */
+  --bs-primary: #2563EB;
+  --bs-primary-rgb: 37, 99, 235;
+  --bs-body-bg: var(--solvix-bg);
+  --bs-body-color: var(--solvix-text-main);
+  --bs-border-color: var(--solvix-border);
+  --bs-card-bg: var(--solvix-surface);
+  --bs-card-border-color: var(--solvix-border);
+}
+
+[data-bs-theme="dark"] {
+  /* Dark Mode Palette - Deep rich slate, no pure black */
+  --solvix-primary: #3B82F6;
+  --solvix-primary-hover: #60A5FA;
+  --solvix-primary-subtle: rgba(59, 130, 246, 0.16);
+  --solvix-primary-border: rgba(59, 130, 246, 0.35);
+
+  --solvix-accent: #22D3EE;
+  --solvix-accent-subtle: rgba(34, 211, 238, 0.15);
+
+  --solvix-success: #10B981;
+  --solvix-success-subtle: rgba(16, 185, 129, 0.16);
+  --solvix-success-border: rgba(16, 185, 129, 0.3);
+
+  --solvix-warning: #F59E0B;
+  --solvix-warning-subtle: rgba(245, 158, 11, 0.16);
+  --solvix-warning-border: rgba(245, 158, 11, 0.3);
+
+  --solvix-danger: #F87171;
+  --solvix-danger-subtle: rgba(239, 68, 68, 0.16);
+  --solvix-danger-border: rgba(239, 68, 68, 0.3);
+
+  --solvix-info: #38BDF8;
+  --solvix-info-subtle: rgba(56, 189, 248, 0.16);
+  --solvix-info-border: rgba(56, 189, 248, 0.3);
+
+  --solvix-bg: #0F172A;
+  --solvix-surface: #1E293B;
+  --solvix-surface-elevated: #273549;
+  --solvix-border: #334155;
+  --solvix-border-subtle: #1E293B;
+
+  --solvix-text-main: #F8FAFC;
+  --solvix-text-muted: #94A3B8;
+  --solvix-text-dim: #64748B;
+
+  --solvix-sidebar-bg: #090E1A;
+  --solvix-sidebar-hover: rgba(255, 255, 255, 0.06);
+  --solvix-sidebar-border: #1E293B;
+
+  --solvix-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+  --solvix-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.4);
+  --solvix-shadow-lg: 0 14px 32px rgba(0, 0, 0, 0.5);
+
+  /* Bootstrap 5.3 Dark Theme Overrides */
+  --bs-primary: #3B82F6;
+  --bs-primary-rgb: 59, 130, 246;
+  --bs-body-bg: var(--solvix-bg);
+  --bs-body-color: var(--solvix-text-main);
+  --bs-border-color: var(--solvix-border);
+  --bs-card-bg: var(--solvix-surface);
+  --bs-card-border-color: var(--solvix-border);
+}
+
+/* ==========================================================================
+   Base & Resets
+   ========================================================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  font-family: var(--font-family);
+  background-color: var(--solvix-bg);
+  color: var(--solvix-text-main);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+#root {
+  min-height: 100vh;
+}
+
+pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+/* Custom Scrollbars */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--solvix-border);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--solvix-text-dim);
+}
+
+/* ==========================================================================
+   Branding & Typography
+   ========================================================================== */
+
+.solvix-brand-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  color: #FFFFFF;
+}
+
+.solvix-brand-slogan {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: #94A3B8;
+  letter-spacing: 0.2px;
+}
+
+/* ==========================================================================
+   Layout: App, Sidebar & Topbar
+   ========================================================================== */
+
+.solvix-app,
+.nexdesk-app {
+  min-height: 100vh;
+  display: flex;
+  background-color: var(--solvix-bg);
+}
+
+/* Sidebar */
+.solvix-sidebar,
+.nexdesk-sidebar {
+  position: fixed;
+  inset: 0 auto 0 0;
+  width: 260px;
+  background: var(--solvix-sidebar-bg);
+  color: #FFFFFF;
+  z-index: 1040;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--solvix-sidebar-border);
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.15);
+}
+
+.solvix-sidebar-brand,
+.nexdesk-sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 22px 20px;
+  border-bottom: 1px solid var(--solvix-sidebar-border);
+}
+
+.solvix-sidebar-label,
+.nexdesk-sidebar-label {
+  color: #64748B;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  padding: 22px 20px 8px;
+}
+
+.solvix-sidebar-nav,
+.nexdesk-sidebar-nav {
+  padding: 8px 12px;
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.solvix-nav-link,
+.nexdesk-nav-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 14px;
+  color: #94A3B8;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 500;
+  font-size: 0.92rem;
+  transition: all 0.2s ease;
+}
+
+.solvix-nav-link:hover,
+.nexdesk-nav-link:hover {
+  color: #FFFFFF;
+  background: var(--solvix-sidebar-hover);
+  transform: translateX(2px);
+}
+
+.solvix-nav-link.activo,
+.nexdesk-nav-link.activo {
+  color: #FFFFFF;
+  background: linear-gradient(135deg, var(--solvix-primary) 0%, #1D4ED8 100%);
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+}
+
+.solvix-nav-icon,
+.nexdesk-nav-icon {
+  width: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.solvix-sidebar-footer,
+.nexdesk-sidebar-footer {
+  padding: 18px 20px;
+  color: #94A3B8;
+  border-top: 1px solid var(--solvix-sidebar-border);
+  font-size: 0.8rem;
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.solvix-online-dot,
+.nexdesk-online-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10B981;
+  box-shadow: 0 0 8px #10B981;
+  margin-right: 8px;
+}
+
+/* Main Area */
+.solvix-main,
+.nexdesk-main {
+  margin-left: 260px;
+  min-height: 100vh;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: var(--solvix-bg);
+  transition: margin-left 0.25s ease;
+}
+
+/* Topbar */
+.solvix-topbar,
+.nexdesk-topbar {
+  min-height: 68px;
+  background: var(--solvix-surface);
+  border-bottom: 1px solid var(--solvix-border);
+  padding: 12px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  backdrop-filter: blur(10px);
+  box-shadow: var(--solvix-shadow-sm);
+  transition: background-color 0.25s ease, border-color 0.25s ease;
+}
+
+.solvix-content,
+.nexdesk-content {
+  padding: 28px;
+  flex: 1;
+}
+
+.solvix-avatar,
+.nexdesk-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--solvix-primary-subtle);
+  color: var(--solvix-primary);
+  border: 1px solid var(--solvix-primary-border);
+  display: grid;
+  place-items: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.solvix-menu-toggle,
+.nexdesk-menu-toggle {
+  display: none;
+}
+
+.solvix-overlay,
+.nexdesk-overlay {
+  display: none;
+}
+
+/* Theme Toggle Button */
+.solvix-theme-toggle {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  background: var(--solvix-surface);
+  border: 1px solid var(--solvix-border);
+  color: var(--solvix-text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.solvix-theme-toggle:hover {
+  background: var(--solvix-border-subtle);
+  color: var(--solvix-text-main);
+  border-color: var(--solvix-primary);
+  transform: rotate(15deg);
+}
+
+/* ==========================================================================
+   Responsive Overrides
+   ========================================================================== */
+
+@media (max-width: 991px) {
+  .solvix-sidebar,
+  .nexdesk-sidebar {
+    transform: translateX(-100%);
+  }
+
+  .solvix-sidebar.abierto,
+  .nexdesk-sidebar.abierto {
+    transform: translateX(0);
+  }
+
+  .solvix-main,
+  .nexdesk-main {
+    margin-left: 0;
+  }
+
+  .solvix-menu-toggle,
+  .nexdesk-menu-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .solvix-overlay,
+  .nexdesk-overlay {
+    display: block;
+    position: fixed;
+    inset: 0;
+    border: 0;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(2px);
+    z-index: 1035;
+  }
+
+  .solvix-content,
+  .nexdesk-content {
+    padding: 20px 14px;
+  }
+}
+
+@media (max-width: 576px) {
+  .solvix-topbar,
+  .nexdesk-topbar {
+    padding: 10px 16px;
+  }
+  .nexdesk-user-info {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Modern SaaS Cards, Badges & Tables
+   ========================================================================== */
+
+.solvix-card,
+.card {
+  background-color: var(--solvix-surface) !important;
+  border: 1px solid var(--solvix-border) !important;
+  border-radius: 14px !important;
+  box-shadow: var(--solvix-shadow-sm);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+.solvix-card-interactive:hover,
+.nexdesk-module-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--solvix-primary) !important;
+  box-shadow: var(--solvix-shadow-md) !important;
+}
+
+/* KPI Stat Cards */
+.solvix-kpi-card {
+  padding: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: relative;
+  overflow: hidden;
+}
+
+.solvix-kpi-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: var(--kpi-color, var(--solvix-primary));
+}
+
+/* Modern Form Controls */
+.form-control,
+.form-select {
+  background-color: var(--solvix-surface) !important;
+  border: 1px solid var(--solvix-border) !important;
+  color: var(--solvix-text-main) !important;
+  border-radius: 10px !important;
+  padding: 0.6rem 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--solvix-primary) !important;
+  box-shadow: 0 0 0 3px var(--solvix-primary-subtle) !important;
+  outline: none;
+}
+
+.form-control::placeholder {
+  color: var(--solvix-text-dim) !important;
+}
+
+/* Primary Button */
+.btn-primary {
+  background: linear-gradient(135deg, var(--solvix-primary) 0%, #1D4ED8 100%) !important;
+  border: 1px solid var(--solvix-primary) !important;
+  color: #FFFFFF !important;
+  font-weight: 600;
+  border-radius: 9px;
+  box-shadow: 0 2px 6px rgba(37, 99, 235, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1D4ED8 0%, #1E40AF 100%) !important;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
+  transform: translateY(-1px);
+}
+
+.btn-outline-primary {
+  color: var(--solvix-primary) !important;
+  border-color: var(--solvix-border) !important;
+  background: var(--solvix-surface) !important;
+  border-radius: 9px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.btn-outline-primary:hover:not(:disabled) {
+  background: var(--solvix-primary-subtle) !important;
+  border-color: var(--solvix-primary) !important;
+  color: var(--solvix-primary) !important;
+}
+
+/* Badges for Ticket Statuses */
+.solvix-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.2px;
+  text-transform: capitalize;
+  border: 1px solid transparent;
+}
+
+/* Status variants */
+.solvix-badge-abierto {
+  background: var(--solvix-primary-subtle);
+  color: var(--solvix-primary);
+  border-color: var(--solvix-primary-border);
+}
+
+.solvix-badge-asignado {
+  background: var(--solvix-info-subtle);
+  color: var(--solvix-info);
+  border-color: var(--solvix-info-border);
+}
+
+.solvix-badge-en_proceso {
+  background: var(--solvix-warning-subtle);
+  color: var(--solvix-warning);
+  border-color: var(--solvix-warning-border);
+}
+
+.solvix-badge-resuelto {
+  background: var(--solvix-success-subtle);
+  color: var(--solvix-success);
+  border-color: var(--solvix-success-border);
+}
+
+.solvix-badge-cerrado {
+  background: rgba(100, 116, 139, 0.12);
+  color: var(--solvix-text-muted);
+  border-color: var(--solvix-border);
+}
+
+.solvix-badge-reabierto {
+  background: var(--solvix-danger-subtle);
+  color: var(--solvix-danger);
+  border-color: var(--solvix-danger-border);
+}
+
+/* Priority variants */
+.solvix-priority-alta {
+  background: var(--solvix-danger-subtle);
+  color: var(--solvix-danger);
+  border: 1px solid var(--solvix-danger-border);
+  font-weight: 600;
+}
+
+.solvix-priority-media {
+  background: var(--solvix-warning-subtle);
+  color: var(--solvix-warning);
+  border: 1px solid var(--solvix-warning-border);
+  font-weight: 600;
+}
+
+.solvix-priority-baja {
+  background: var(--solvix-success-subtle);
+  color: var(--solvix-success);
+  border: 1px solid var(--solvix-success-border);
+  font-weight: 600;
+}
+
+/* Modern Tables */
+.table {
+  --bs-table-bg: transparent;
+  --bs-table-color: var(--solvix-text-main);
+  --bs-table-border-color: var(--solvix-border);
+  color: var(--solvix-text-main) !important;
+}
+
+.table thead th {
+  background-color: var(--solvix-bg) !important;
+  color: var(--solvix-text-muted) !important;
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--solvix-border);
+  padding: 12px 16px;
+}
+
+.table tbody td {
+  padding: 14px 16px;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--solvix-border);
+  background-color: transparent !important;
+}
+
+.table-hover tbody tr:hover {
+  background-color: var(--solvix-primary-subtle) !important;
+}
+
+/* Modals */
+.modal-content {
+  background-color: var(--solvix-surface) !important;
+  border: 1px solid var(--solvix-border) !important;
+  color: var(--solvix-text-main) !important;
+  box-shadow: var(--solvix-shadow-lg) !important;
+  border-radius: 16px !important;
+}
+
+.modal-header {
+  border-bottom: 1px solid var(--solvix-border) !important;
+  padding: 1.25rem 1.5rem;
+}
+
+.modal-footer {
+  border-top: 1px solid var(--solvix-border) !important;
+  padding: 1rem 1.5rem;
+}
+
+.modal-backdrop.show {
+  opacity: 0.65;
+  backdrop-filter: blur(4px);
+}
+
+/* Dropdown Menu */
+.dropdown-menu {
+  background-color: var(--solvix-surface) !important;
+  border: 1px solid var(--solvix-border) !important;
+  box-shadow: var(--solvix-shadow-md) !important;
+  border-radius: 12px !important;
+  padding: 6px;
+  color: var(--solvix-text-main) !important;
+}
+
+.dropdown-item {
+  color: var(--solvix-text-main) !important;
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  transition: all 0.15s ease;
+}
+
+.dropdown-item:hover {
+  background-color: var(--solvix-primary-subtle) !important;
+  color: var(--solvix-primary) !important;
+}
+
+.dropdown-divider {
+  border-top: 1px solid var(--solvix-border) !important;
+}
+
+/* ==========================================================================
+   SOLVIX Toast Notification
+   ========================================================================== */
+
+.solvix-toast,
+.nexdesk-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 1100;
+  width: min(400px, calc(100vw - 32px));
+  padding: 18px 20px;
+  background: var(--solvix-surface);
+  border: 1px solid var(--solvix-border);
+  border-left: 4px solid var(--solvix-success);
+  border-radius: 14px;
+  box-shadow: var(--solvix-shadow-lg);
+  opacity: 0;
+  transform: translateY(-16px);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.solvix-toast.visible,
+.nexdesk-toast.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.solvix-toast-icon,
+.nexdesk-toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+  background: var(--solvix-success-subtle);
+  color: var(--solvix-success);
+  border-radius: 10px;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.solvix-toast-progress,
+.nexdesk-toast-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 3px;
+  width: 100%;
+  background: var(--solvix-success);
+  transform-origin: left;
+  animation: solvix-progress 4.3s linear forwards;
+}
+
+@keyframes solvix-progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+/* ==========================================================================
+   Interactive SVG Ticket Flow (FlujoTickets)
+   ========================================================================== */
+
+.nexdesk-flujo-scroll {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid var(--solvix-border);
+  border-radius: 14px;
+  background: var(--solvix-surface);
+  padding: 16px;
+}
+
+.nexdesk-flujo-svg {
+  display: block;
+  width: 100%;
+  max-width: 850px;
+  min-width: 480px;
+  height: auto;
+  margin: 0 auto;
+}
+
+.nexdesk-flujo-nodo {
+  cursor: pointer;
+  outline: none;
+}
+
+.nexdesk-flujo-nodo rect {
+  transition: all 0.2s ease;
+}
+
+.nexdesk-flujo-nodo:hover rect,
+.nexdesk-flujo-nodo:focus-visible rect {
+  filter: drop-shadow(0 4px 10px rgba(37, 99, 235, 0.35));
+}
+
+.nexdesk-flujo-detalle {
+  border: 1px solid var(--solvix-border);
+  border-left: 4px solid var(--solvix-primary);
+  border-radius: 12px;
+  padding: 18px 20px;
+  background: var(--solvix-surface);
+}
+
+/* Legacy Support Map */
+.nexdesk-logo {
+  width: 58px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+  color: white;
+  font-size: 1.8rem;
+  font-weight: 800;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.3);
+}
+
+.nexdesk-brand-icon {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #2563EB 0%, #06B6D4 100%);
+  border-radius: 10px;
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  font-size: 20px;
+  color: #FFFFFF;
+}
+
+.nexdesk-module-icon {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--solvix-primary-subtle);
+  color: var(--solvix-primary);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  border: 1px solid var(--solvix-primary-border);
+}

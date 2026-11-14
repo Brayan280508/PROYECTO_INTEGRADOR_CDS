@@ -1,0 +1,37 @@
+$kind: collection
+name: NEXDESK | LAB NODE 25 | 40 pruebas esenciales CRUD + RBAC + BOLA
+description: Colección reducida a 40 casos esenciales desde el LAB26 aportado por el usuario. Ejecutar manualmente en orden. Requiere backend actualizado, usuarios Supabase Auth vinculados y credenciales locales. Las pruebas HTTP no equivalen por sí solas a validación completa de seguridad. No ejecutar sobre producción.
+variables:
+  baseUrl: http://localhost:3000
+  tokenSofia: ""
+  tokenPedro: ""
+  tokenAna: ""
+  tokenTecnico: ""
+  tokenMaria: ""
+  tokenInvalido: TOKEN_INVALIDO
+  emailSofia: ""
+  emailPedro: ""
+  emailAna: ""
+  emailTecnico: ""
+  emailMaria: ""
+  passwordSofia: ""
+  passwordPedro: ""
+  passwordAna: ""
+  passwordTecnico: ""
+  passwordMaria: ""
+  passwordNuevaTecnico: ""
+  emailNuevoUsuario: ""
+  emailNuevoTecnico: ""
+  emailNuevoAdmin: ""
+  emailIntentoSuperadmin: ""
+  emailIntentoAdmin: ""
+  usuarioId: ""
+  tecnicoUsuarioId: ""
+  adminCreadoId: ""
+  tecnicoId: ""
+  categoriaId: ""
+  ticketId: ""
+  ticketAjenoId: ""
+  seguimientoId: ""
+  sofiaId: ""
+  runId: A001

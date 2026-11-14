@@ -1,0 +1,15 @@
+$kind: http-request
+description: "Caso original LAB26 #36. Esperado HTTP 200. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/tecnicos"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenSofia}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 200", () => pm.response.to.have.status(200));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+    language: text/javascript
+order: 2000

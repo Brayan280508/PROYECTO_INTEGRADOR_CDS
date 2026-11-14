@@ -1,0 +1,26 @@
+$kind: http-request
+description: "Caso original LAB26 #20. Esperado HTTP 200. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/usuarios/{{usuarioId}}"
+method: PUT
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "tipo_documento": "CC",
+      "numero_documento": "LAB25{{runId}}01",
+      "nombre": "Andres Felipe",
+      "apellido": "Ramirez"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenSofia}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 200", () => pm.response.to.have.status(200));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+    language: text/javascript
+order: 5000

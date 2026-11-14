@@ -1,0 +1,16 @@
+$kind: http-request
+description: "Caso original LAB26 #70. Esperado HTTP 404. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/tickets/{{ticketAjenoId}}"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAna}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 404", () => pm.response.to.have.status(404));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+      pm.test("Recurso no revelado",()=>pm.expect(data.error).to.be.a("string"));
+    language: text/javascript
+order: 3000

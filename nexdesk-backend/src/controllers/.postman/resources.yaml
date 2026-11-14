@@ -1,0 +1,13 @@
+# Use this workspace to collaborate
+workspace:
+  id: 84164c32-af98-4541-8b6e-df5552c9dbfd
+
+cloudResources:
+  collections:
+    ../postman/collections/NEXDESK - LAB NODE 25 - 40 pruebas esenciales CRUD + RBAC + BOLA: 6575bf7d-24bb-46df-8c4d-e6f8d58b3566
+
+# All resources in the `postman/` folder are automatically registered in Local View.
+# Point to additional files outside the `postman/` folder to register them individually. Example:
+#localResources:
+#  collections:
+#    - ../tests/E2E Test Collection/

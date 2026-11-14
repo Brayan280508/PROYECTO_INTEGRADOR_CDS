@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="es" data-bs-theme="light">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="SOLVIX - Plataforma moderna de gestión de tickets de soporte técnico. Soluciones rápidas y eficientes." />
+    <title>SOLVIX — Soluciones rápidas y eficientes</title>
+    <!-- Prevent theme flash -->
+    <script>
+      (function() {
+        const storedTheme = localStorage.getItem('solvix_theme');
+        const systemDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        const theme = storedTheme || (systemDark ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-bs-theme', theme);
+      })();
+    </script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

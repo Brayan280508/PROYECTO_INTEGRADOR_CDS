@@ -1,0 +1,16 @@
+$kind: http-request
+description: "Caso original LAB26 #17. Esperado HTTP 403. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/usuarios"
+method: GET
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAna}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 403", () => pm.response.to.have.status(403));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+      pm.test("Sin permisos",()=>pm.expect(data.error).to.be.a("string"));
+    language: text/javascript
+order: 2000

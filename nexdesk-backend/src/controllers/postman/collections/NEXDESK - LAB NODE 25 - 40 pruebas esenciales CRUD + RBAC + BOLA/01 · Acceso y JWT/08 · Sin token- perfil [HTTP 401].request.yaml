@@ -1,0 +1,14 @@
+$kind: http-request
+name: "08 · Sin token: perfil [HTTP 401]"
+description: "Caso original LAB26 #13. Esperado HTTP 401. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/auth/me"
+method: GET
+auth:
+  type: noauth
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 401", () => pm.response.to.have.status(401));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+    language: text/javascript
+order: 8000

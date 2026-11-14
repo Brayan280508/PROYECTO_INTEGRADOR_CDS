@@ -1,0 +1,28 @@
+$kind: http-request
+description: "Caso original LAB26 #53. Esperado HTTP 201. Ejecutar en orden cuando dependa de datos anteriores."
+url: "{{baseUrl}}/api/tickets"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "titulo": "LAB26 Falla de red {{runId}}",
+      "descripcion": "Sin conexión a Internet en laboratorio",
+      "prioridad": "media",
+      "categoria_id": "{{categoriaId}}"
+    }
+auth:
+  type: bearer
+  credentials:
+    token: "{{tokenAna}}"
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test("HTTP 201", () => pm.response.to.have.status(201));
+      let data = {}; try { data = pm.response.json(); } catch(e) {}
+      if (pm.response.code >= 200 && pm.response.code < 300) { const v = data.id; if(v !== undefined && v !== null) pm.collectionVariables.set("ticketId", String(v)); }
+      pm.test("Creación devuelve JSON",()=>pm.expect(data).to.be.an("object"));
+    language: text/javascript
+order: 1000

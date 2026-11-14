@@ -1,0 +1,32 @@
+name: NEXDESK LAB25 - 40 pruebas - Local
+values:
+  - key: baseUrl
+    value: 'http://localhost:3000'
+  - key: emailSofia
+    value: ''
+  - key: emailPedro
+    value: ''
+  - key: emailAna
+    value: ''
+  - key: emailTecnico
+    value: ''
+  - key: emailMaria
+    value: ''
+  - key: passwordSofia
+    value: ''
+  - key: passwordPedro
+    value: ''
+  - key: passwordAna
+    value: ''
+  - key: passwordTecnico
+    value: ''
+  - key: passwordMaria
+    value: ''
+  - key: emailNuevoUsuario
+    value: ''
+  - key: emailNuevoTecnico
+    value: ''
+  - key: emailIntentoSuperadmin
+    value: ''
+  - key: passwordNuevaSofia
+    value: ''
