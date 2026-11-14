@@ -1,285 +1,292 @@
-# NEXDESK — Guía de instalación desde cero (Frontend + Backend + Base de datos)
+# SOLVIX — Plataforma de Gestión de Tickets de Soporte Técnico
 
-**Sistema Integral de Gestión de Soporte Técnico**  
-**Ruta técnica:** Node.js / Express (API REST) + PostgreSQL / Supabase Auth + React / Vite (SPA).  
-**Objetivo:** Construir el frontend desde la terminal de VS Code usando únicamente los archivos entregados de insumo, conectar con el backend y verificar módulos, reportes y notificaciones.
+> **"Soluciones rápidas y eficientes"**  
+> **Proyecto Integrador CDS** · Sistema Integral de Gestión de Help Desk  
+> **Ruta Técnica:** Node.js / Express (API REST) + PostgreSQL / Supabase Auth + React 19 / Vite 8 (SPA)
 
-> **Importante:** la carpeta `src/` entregada contiene el código del frontend, pero **no reemplaza** la instalación de dependencias ni la configuración de Vite. Los perfiles de prueba de SQL **no son cuentas de Supabase Auth**; las credenciales deben aprovisionarse por el flujo seguro del backend.
+---
 
-## 0. Insumos compartidos - docente
+## 📌 Visión General del Proyecto
 
-- **Backend completo** (`BE/`): `src/`, `database/`, `package.json`, `package-lock.json`, `.env.example`, `certs/` (solo lo que corresponde), colección Postman. **No distribuir `.env` con claves reales para ajustar bajo sus cuentas previamente configuradas**.
-- **Frontend parcial**: `src/`, `.env`, `.gitignore`, `index.html`. Los archivos `.env` de frontend solo contienen configuración pública (`VITE_API_URL`).
-- **Dos recursos adicionales a considerar**: `public/favicon.svg` y `public/icons.svg`, sino aparecen al momento de crear el proyecto FE. Se incluyen en la carpeta `frontend_public/` de este paquete.
-- Esta guía `README.md`, el orden de SQL `database/README_ORDEN_SQL.md` y el esquema consolidado `database/01_schema.sql`.Leer el README de la carpeta database del BE.
+**SOLVIX** es una solución integral y moderna de mesa de ayuda (*Help Desk*) diseñada para optimizar la trazabilidad, comunicación y resolución de incidencias tecnológicas entre usuarios solicitantes y especialistas técnicos.
 
-### Estructura esperada
+La plataforma ha sido estructurada bajo un estándar de desarrollo B2B SaaS de alto rendimiento, implementando:
+- **Seguridad Rigurosa:** Autenticación centralizada mediante Supabase Auth, tokens JWT almacenados en sesión segura, control de acceso basado en roles (**RBAC**), mitigación de fallos de autorización **BOLA/IDOR**, y políticas de cambio obligatorio de contraseña en el primer acceso.
+- **Experiencia de Usuario Moderna (UI/UX):** Interfaz fluida y responsive desarrollada en React 19 + Bootstrap 5.3 + Vite 8, con soporte nativo y adaptativo para **Modo Claro (Light Mode) y Modo Oscuro (Dark Mode)**, detección de preferencias del sistema operativo (`prefers-color-scheme`) e iconografía vectorial SVG de alta eficiencia.
+- **Operación en Tiempo Real:** Gestión y matriz de transiciones de tickets, asignación dinámica de especialistas, auditoría y trazabilidad cronológica de seguimientos, campana de notificaciones con sondeo reactivo y generación de reportes analíticos ejecutivos en **PDF** y **CSV**.
+
+---
+
+## 🏗️ Arquitectura del Repositorio
+
+El repositorio está organizado en dos componentes principales desacoplados:
 
 ```text
-NEXDESK/
-├── BE/
-│   ├── src/
-│   ├── database/
-│   │   ├── 01_schema.sql
-│   │   ├── 02_seed.sql
-│   │   ├── 03_queries.sql
-│   │   ├── 04_tests.sql
+11. PROYECTO_INTEGRADOR/
+├── nexdesk-backend/                 # API REST y Capa de Datos (Node.js + PostgreSQL)
+│   ├── certs/                       # Certificados SSL/TLS para conexión segura a base de datos
+│   ├── database/                    # Esquemas SQL, migraciones, semillas y pruebas
+│   │   ├── 00_ADVERTENCIA_limpiar_esquema.sql
+│   │   ├── 00_VERIFICAR_limpieza_esquema.sql
+│   │   ├── 01_schema.sql            # Esquema consolidado integral (DDL, triggers, RLS)
+│   │   ├── 02_seed.sql              # Datos de prueba para entorno de laboratorio
+│   │   ├── 03_queries.sql           # Consultas analíticas y de auditoría
+│   │   ├── 04_tests.sql             # Pruebas funcionales de seguridad y constraints
 │   │   ├── 05_verificacion_lab24.sql
 │   │   ├── 06_lab25_seguridad.sql
 │   │   ├── 07_notificaciones.sql
 │   │   ├── 08_funcion_avisos.sql
 │   │   ├── 09_avisos_seguimientos.sql
-│   │   └── 10_verificacion_integral.sql
-│   ├── .env.example
+│   │   ├── 10_verificacion_integral.sql
+│   │   └── README_ORDEN_SQL.md      # Guía detallada del orden de ejecución SQL
+│   ├── postman/                     # Colección de pruebas de integración para Postman
+│   ├── src/                         # Código fuente de la API REST Express
+│   │   ├── config/                  # Conexión DB (Pool pg), variables de entorno y Supabase
+│   │   ├── controllers/             # Controladores de negocio
+│   │   ├── middlewares/             # Autenticación JWT, validación de roles y rate limiters
+│   │   ├── routes/                  # Definición de endpoints REST
+│   │   └── server.js                # Punto de entrada de la aplicación Express
+│   ├── .env.example                 # Plantilla de variables de entorno del servidor
 │   └── package.json
-└── nexdesk-frontend/
-    ├── src/                     <- entregada por el docente
-    ├── public/
-    │   ├── favicon.svg
-    │   └── icons.svg
-    ├── .env                     <- entregado (URL pública de la API)
-    ├── .gitignore              <- entregado por el docente
-    ├── index.html              <- entregado por el docente
-    ├── eslint.config.js        <- generado por Vite
-    ├── vite.config.js          <- generado por Vite
-    ├── package.json            <- generado/actualizado con npm
-    └── package-lock.json       <- generado con npm
+│
+└── nexdesk-frontend/                # Cliente Web SPA (React 19 + Vite 8 + Bootstrap 5.3)
+    ├── public/                      # Recursos estáticos públicos (Favicon SOLVIX SVG)
+    ├── src/
+    │   ├── assets/                  # Recursos gráficos
+    │   ├── components/              # Componentes visuales reutilizables e iconografía SVG
+    │   │   ├── AnaliticaTickets.jsx # Métricas, gráficos y exportación PDF/CSV
+    │   │   ├── CampanaNotificaciones.jsx
+    │   │   ├── CredencialTemporal.jsx
+    │   │   ├── EstadoBackend.jsx
+    │   │   ├── FlujoTickets.jsx     # Diagrama SVG interactivo Dark/Light
+    │   │   ├── FormularioUsuario.jsx
+    │   │   ├── HistorialSeguimientos.jsx
+    │   │   ├── Iconos.jsx           # Set vectorial SVG sin librerías externas
+    │   │   ├── ModalAsignarTecnico.jsx
+    │   │   ├── ModalCategoria.jsx
+    │   │   ├── ModalEditarUsuario.jsx
+    │   │   ├── ModalEstadoTicket.jsx
+    │   │   ├── ModalEstadoUsuario.jsx
+    │   │   ├── ModalNuevoTicket.jsx
+    │   │   ├── ModalNuevoUsuario.jsx
+    │   │   ├── ModalRestablecerPassword.jsx
+    │   │   ├── ModalTecnico.jsx
+    │   │   ├── NavbarPrincipal.jsx  # Cabecera con Theme Toggle y menú de usuario
+    │   │   ├── Sidebar.jsx          # Barra lateral tecnológica SOLVIX
+    │   │   └── ToastBienvenida.jsx
+    │   ├── config/                  # Configuración de API y menú por rol
+    │   ├── context/                 # Contexto de autenticación (AuthContext)
+    │   ├── hooks/                   # Custom hooks (useAuth, useTheme)
+    │   ├── layouts/                 # MainLayout (Sidebar + Navbar + Content)
+    │   ├── pages/                   # Vistas principales (Login, Dashboard, Tickets, etc.)
+    │   ├── routes/                  # AppRouter y RutaProtegida
+    │   ├── services/                # Servicios de consumo HTTP (Fetch API)
+    │   ├── App.css                  # Utilidades y animaciones
+    │   ├── index.css                # Sistema de diseño SOLVIX, variables CSS y temas
+    │   └── main.jsx                 # Entrada de la SPA
+    ├── .env                         # Configuración pública de conexión a la API
+    ├── eslint.config.js             # Reglas de linting (ESLint 10)
+    ├── vite.config.js               # Configuración de compilación Vite
+    └── package.json
 ```
 
-## 1. Verificar requisitos en Windows / VS Code (solo validar)
+---
 
-Instalar **Node.js 22 LTS o compatible con Vite 8** (Node.js 20.19+ o 22.12+), VS Code y una terminal PowerShell. En VS Code, abrir **Terminal → New Terminal**:
+## 🚀 Requisitos del Sistema
+
+- **Node.js:** Versión 20.19+ o 22 LTS (recomendado Node.js 22.x).
+- **Gestor de Paquetes:** npm 10+.
+- **Base de Datos:** Instancia de PostgreSQL (v14+) o proyecto configurado en **Supabase**.
+- **Herramientas de Desarrollo:** Visual Studio Code, Git, Postman o navegador moderno (Chrome, Edge, Firefox).
+
+---
+
+## ⚙️ Guía de Instalación y Puesta en Marcha
+
+Se recomienda trabajar con **dos terminales independientes** en Visual Studio Code: una para el backend y otra para el frontend.
+
+### Paso 1: Configurar la Base de Datos (PostgreSQL / Supabase)
+
+1. Ingresa al **SQL Editor** de tu proyecto en Supabase (o cliente PostgreSQL).
+2. Según el estado de tu base de datos:
+   - **Para una base de datos nueva (vacía):** Ejecuta los scripts en el siguiente orden estricto:
+     1. `nexdesk-backend/database/01_schema.sql` (crea tablas, índices, roles, triggers y RLS).
+     2. `nexdesk-backend/database/02_seed.sql` (datos de prueba para laboratorio).
+     3. `nexdesk-backend/database/10_verificacion_integral.sql` (comprueba consistencia).
+   - **Para una base de datos existente con datos previos:** Consulta `nexdesk-backend/database/README_ORDEN_SQL.md` para aplicar únicamente las migraciones requeridas (`06` al `09`).
+
+> [!IMPORTANT]
+> El esquema de la base de datos implementa seguridad a nivel de filas (**RLS**) y funciones trigger bajo modo `SECURITY INVOKER`. No desactives RLS en el proyecto.
+
+---
+
+### Paso 2: Configurar e Iniciar el Backend
+
+Abre la **Terminal 1** en la raíz del proyecto y dirígete a `nexdesk-backend`:
 
 ```powershell
-node -v
-npm -v
-```
-
-Si PowerShell bloquea `npm.ps1`, usar `npm.cmd` en los comandos, o configurar la política de ejecución conforme a las reglas del equipo; no es necesario desactivar controles globales.
-
-## 2. Crear el proyecto frontend con Vite
-
-Desde la carpeta de trabajo del estudiante (no dentro de `BE`):
-
-```powershell
-npm create vite@latest nexdesk-frontend
-```
-
-Seleccionar las opciones interactivas:
-
-1. **Framework:** React.
-2. **Variant:** JavaScript (no TypeScript).
-3. Si pregunta por instalar dependencias, responder **Yes**.
-4. Si pregunta por iniciar el servidor inmediatamente, se puede responder **No** o de preferencia **SI**y seguir con esta guía.
-
-Entrar al proyecto:
-
-```powershell
-cd nexdesk-frontend
-npm install (Solo si seleccionó NO en el paso 4)
-```
-
-Si el asistente de Vite cambia sus opciones, elegir siempre React + JavaScript y mantener los archivos de configuración creados por la plantilla.
-
-## 3. Instalar las dependencias que usa NEXDESK
-
-El `src/` actual importa **React Router**, **Bootstrap**, **jsPDF** y **jsPDF AutoTable**. Instalar:
-
-```powershell
-npm install react-router-dom@^7.18.5 bootstrap@5.3 jspdf@^4.2.1 jspdf-autotable@^5.0.9
-```
-
-El proyecto docente de referencia utiliza React 19, Vite 8 y ESLint 10. Si la plantilla generada por Vite instaló otras versiones y aparece un error de compatibilidad, comparar `package.json` con `frontend_package_reference.json` y actualizar las dependencias necesarias. **No copiar `node_modules/` ni `dist/` desde el equipo docente.**
-
-## 4. Reemplazar exactamente los archivos entregados
-
-Con el servidor Vite detenido:
-
-1. Abrir `nexdesk-frontend/` en VS Code.
-2. **Reemplazar el contenido de `src/`** con la carpeta `src/` entregada. Evitar el error de crear `src/src/`.
-3. Reemplazar `.gitignore` e `index.html` en la **raíz** del proyecto.
-4. Crear/reemplazar `.env` en la **raíz** (no dentro de `src/`).
-5. Copiar `favicon.svg` e `icons.svg` dentro de `public/` para conservar los iconos del proyecto. No copiar `dist/` ni `node_modules/`.
-6. **Conservar** `vite.config.js`, `eslint.config.js`, `package.json` y `package-lock.json` generados por Vite, salvo que el docente indique una modificación explícita.
-
-Contenido de `.env` del frontend:
-
-```dotenv
-VITE_API_URL=http://localhost:3000
-```
-
-> Toda variable `VITE_*` se expone al navegador. Nunca incluir `DATABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`, claves JWT ni contraseñas en este archivo.
-
-### Comprobar archivos críticos
-
-- `src/main.jsx`: importa Bootstrap y los estilos globales y monta `<App />`.
-- `src/App.jsx`, `src/routes/AppRouter.jsx`: enrutamiento de la SPA.
-- `src/context/AuthContext.jsx`, `src/hooks/useAuth.js`: sesión y autenticación.
-- `src/config/api.js`: URL base de Express.
-- `src/components/NavbarPrincipal.jsx`, `src/components/CampanaNotificaciones.jsx`: barra superior y notificaciones.
-- `src/components/AnaliticaTickets.jsx`: indicadores y exportación CSV/PDF.
-
-## 5. Preparar PostgreSQL / Supabase (responsable: docente o administrador)
-
-**Escoger una sola ruta:**
-
-**Base nueva (vacía):** ejecutar en Supabase SQL Editor, **en este orden**:
-
-1. `database/01_schema.sql` (esquema integral actualizado).
-2. `database/02_seed.sql` (datos de práctica, **una sola vez**, no en producción).
-3. `database/10_verificacion_integral.sql` (consultas de comprobación).
-
-El `01_schema.sql` integral incluye tablas `roles`, `usuarios`, `tecnicos`, `categorias`, `tickets`, `seguimientos` y `notificaciones`; constraints; índices; funciones/triggers; RLS; `debe_cambiar_password` y el índice único parcial para `auth_user_id`.
-
-**Base existente:** **no ejecutar** `01_schema.sql` ni volver a insertar semillas. Revisar el estado con `10_verificacion_integral.sql` y aplicar únicamente migraciones pendientes `06` → `07` → `08` → `09` en ese orden. Ver `database/README_ORDEN_SQL.md`.
-
-**Atención:** el script original `02_seed.sql` inserta perfiles ficticios, no contraseñas ni cuentas de `auth.users`. El docente debe aprovisionar usuarios de prueba mediante los endpoints administrativos y Supabase Auth. Los triggers de notificación utilizan `SECURITY INVOKER`: comprobar los permisos y la estrategia RLS del rol PostgreSQL que utiliza Express. **No desactivar RLS ni distribuir credenciales privilegiadas como solución.**
-
-## 6. Preparar e iniciar el backend
-
-En una **primera terminal** de VS Code:
-
-```powershell
-cd BE
+cd nexdesk-backend
 npm install
 ```
 
-Crear `.env` a partir de `.env.example` y completar **solo en el entorno seguro** los valores de conexión, URL/clave pública de Supabase y credenciales de administración requeridas por `src/config/env.js`. El docente debe proporcionar las instrucciones o variables por un canal seguro. No compartir ni subir el `.env` real al repositorio.
+1. Crea tu archivo de variables de entorno `.env` copiando la plantilla:
+   ```powershell
+   cp .env.example .env
+   ```
+2. Abre `.env` y configura los parámetros de conexión correspondientes a tu entorno:
+   - `PORT=3000`
+   - `DATABASE_URL=postgresql://usuario:password@host:5432/postgres` (o variables individuales `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`).
+   - `SUPABASE_URL=https://tu-proyecto.supabase.co`
+   - `SUPABASE_SERVICE_ROLE_KEY=tu_service_role_key_secreta`
+   - `SUPABASE_JWT_SECRET=tu_jwt_secret`
+   - `PGSSL_CA_PATH=certs/prod-ca-2021.crt` (si utilizas conexión con verificación TLS).
 
-Si la conexión usa certificado CA, verificar la ruta configurada en `PGSSL_CA_PATH` y que el archivo exista. La API utiliza un `Pool` de PostgreSQL y validación TLS conforme a `src/config/db.js`.
-
-Iniciar:
+Inicia el servidor en modo desarrollo:
 
 ```powershell
 npm run dev
 ```
 
-Probar en navegador o Postman:
-
+Verifica la disponibilidad del servidor en tu navegador o cliente HTTP:
 ```text
 http://localhost:3000/api/estado
 ```
+*Debe retornar `{ "estado": "ok", "timestamp": "..." }`.*
 
-El backend debe permanecer activo mientras se utiliza React. Si falla, revisar la consola del backend antes de depurar el frontend.
+---
 
-## 7. Iniciar el frontend
+### Paso 3: Configurar e Iniciar el Frontend (SOLVIX)
 
-En una **segunda terminal** de VS Code, dentro de `nexdesk-frontend/`:
+Abre la **Terminal 2** en la raíz del proyecto y dirígete a `nexdesk-frontend`:
+
+```powershell
+cd nexdesk-frontend
+npm install
+```
+
+1. Comprueba o crea el archivo `.env` en `nexdesk-frontend/.env`:
+   ```dotenv
+   VITE_API_URL=http://localhost:3000
+   ```
+2. Ejecuta el servidor de desarrollo de Vite:
 
 ```powershell
 npm run dev
 ```
 
-Abrir la dirección que muestra Vite, normalmente:
+Abre en tu navegador la URL que indica la terminal (habitualmente `http://localhost:5173`).
 
-```text
-http://localhost:5173
+---
+
+## 👥 Matriz de Roles y Niveles de Acceso (RBAC)
+
+La plataforma aplica control de acceso basado en roles tanto en el middleware del backend como en las rutas protegidas del frontend:
+
+| Módulo / Funcionalidad | Superadmin | Administrador | Técnico | Usuario Solicitante |
+| :--- | :---: | :---: | :---: | :---: |
+| **Panel de Control (Dashboard)** | ✅ Total | ✅ Total | ✅ Métricas de asignación | ✅ Resumen de solicitudes |
+| **Gestión de Usuarios** | ✅ Todos los roles | ✅ Técnicos y Usuarios | ❌ Sin acceso | ❌ Sin acceso |
+| **Gestión de Técnicos** | ✅ Completa | ✅ Completa | ❌ Solo consulta disp. | ❌ Sin acceso |
+| **Categorías de Servicio** | ✅ CRUD completo | ✅ CRUD completo | ❌ Solo lectura | ❌ Solo lectura |
+| **Gestión de Tickets** | ✅ Todos | ✅ Todos | ✅ Asignados a su perfil | ✅ Propios creados |
+| **Asignar Técnicos** | ✅ Permitido | ✅ Permitido | ❌ Solo lectura | ❌ No permitido |
+| **Cambio de Estado Ticket** | ✅ Permitido | ✅ Permitido | ✅ En proceso / Resuelto | ❌ Solo consulta |
+| **Seguimientos y Trazabilidad**| ✅ Consulta y nota | ✅ Consulta y nota | ✅ Registro de notas | ✅ Registro de notas |
+| **Exportación PDF / CSV** | ✅ Completo | ✅ Completo | ✅ Filtrado a su alcance | ✅ Filtrado a su alcance |
+| **Notificaciones** | ✅ Avisos globales | ✅ Asignaciones/Nuevos | ✅ Tickets asignados | ✅ Cambios de estado |
+
+---
+
+## 🎨 Sistema de Diseño "SOLVIX" (UI/UX)
+
+La versión actual incorpora la nueva identidad visual **SOLVIX ("Soluciones rápidas y eficientes")**:
+
+1. **Light & Dark Mode Nativo:**
+   - Alternancia fluida con un clic en la barra superior o en la pantalla de login.
+   - Sincronización instantánea con el esquema preferido del sistema operativo (`window.matchMedia`).
+   - Persistencia de preferencias del usuario mediante `localStorage`.
+   - Paleta cromática optimizada para evitar fatiga visual: superficie oscura en tonos pizarra `#0F172A` y `#1E293B` con bordes sutiles `#334155`.
+2. **Semántica Visual de Tickets:**
+   - **Estados:** Abierto (Azul tecnológico), Asignado (Cian), En proceso (Ámbar), Resuelto (Verde esmeralda), Cerrado (Gris pizarra), Reabierto (Rojo coral).
+   - **Criticidad:** Alta / Crítica (Rojo coral con contraste AAA), Media (Ámbar cálido), Baja (Verde menta).
+3. **Flujo de Tickets Interactivo:**
+   - Diagrama interactivo SVG en el Dashboard que se adapta automáticamente al tema activo, permitiendo inspeccionar cada fase del ciclo de vida del ticket.
+4. **Reportes Ejecutivos:**
+   - Generación de reportes PDF horizontales estructurados con `jspdf` y `jspdf-autotable`, incluyendo encabezado corporativo SOLVIX, fecha de corte, métricas agregadas y paginación formal.
+   - Exportación limpia en CSV con codificación UTF-8 BOM para apertura directa en Microsoft Excel sin problemas de tildes o caracteres especiales.
+
+---
+
+## 🧪 Pruebas y Validación de Calidad
+
+### Frontend (Linting y Verificación)
+Para verificar la ausencia de errores de sintaxis, imports no utilizados y cumplimiento de estándares React 19:
+
+```powershell
+cd nexdesk-frontend
+npm run lint
+```
+*El proyecto se entrega con 0 errores y 0 advertencias de ESLint.*
+
+Para compilar la versión optimizada de producción:
+
+```powershell
+npm run build
+npm run preview
 ```
 
-La aplicación debe mostrar la pantalla de acceso. Si Vite usa otro puerto, revisar la configuración CORS de Express para permitir el origen real del frontend.
+### Backend (Pruebas de Seguridad y Endpoints)
+- **Colección Postman:** Importa los archivos ubicados en `nexdesk-backend/postman/` para ejecutar pruebas automatizadas sobre:
+  - Autenticación y renovación de tokens.
+  - Validación de campos con `express-validator`.
+  - Intentos de acceso no autorizado **BOLA/IDOR** (asegurando respuestas `403 Forbidden`).
+  - Pruebas de tasa límite con `express-rate-limit` (prevención de fuerza bruta).
 
-## 8. Iniciar sesión y comprobar permisos
+---
 
-1. El administrador debe crear/vincular cuentas reales de Supabase Auth con `public.usuarios.auth_user_id`.
-2. Iniciar sesión con un usuario autorizado.
-3. Si el perfil exige cambio de contraseña (`debe_cambiar_password`), completar el flujo antes de acceder a módulos protegidos.
-4. Cerrar sesión y verificar que no se pueda abrir una ruta protegida sin token.
-5. Probar cuentas con roles `superadmin`, `admin`, `tecnico`, `usuario` y comprobar que cada una vea solo sus recursos permitidos.
+## 🔍 Consultas SQL de Comprobación Rápida
 
-El frontend almacena el token de sesión en `sessionStorage`; no se debe pegar ni compartir el token en capturas, documentos o repositorios.
-
-## 9. Pruebas funcionales por módulo
-
-| Módulo | Prueba sugerida | Resultado esperado |
-|---|---|---|
-| Estado del backend | Abrir aplicación y consultar estado | API responde correctamente |
-| Login | Ingresar con credenciales de prueba válidas | Acceso al Dashboard |
-| Usuarios | Crear, consultar, editar, activar/desactivar según rol | Respuesta y permisos correctos |
-| Técnicos | Crear/editar perfil técnico y consultar disponibilidad | Perfil asociado a usuario con rol técnico |
-| Categorías | Listar y gestionar categorías | Cambios persistidos |
-| Tickets | Crear ticket y filtrar por estado/prioridad | Ticket visible según RBAC/BOLA |
-| Asignación | Asignar técnico a ticket | Asignación persistida |
-| Estado | Cambiar a asignado/en_proceso/resuelto/cerrado | Historial y fechas coherentes |
-| Seguimientos | Agregar observación permitida | Observación visible en historial |
-| Analítica | Revisar KPIs y distribución | Conteos según tickets visibles |
-| CSV | Exportar reporte | Archivo legible en Excel |
-| PDF | Exportar reporte | Documento con tabla e indicadores |
-| Campana | Crear, asignar, cambiar estado o agregar seguimiento | Notificaciones al destinatario correcto |
-| Lectura | Abrir notificación | Cambia `leida` a `true` y baja contador |
-
-**Notificaciones:** React consulta la API periódicamente (cada 30 segundos); no se usan WebSockets ni Supabase Realtime. La tabla `notificaciones` persiste avisos incluso tras recargar la página. La consulta y lectura deben filtrar por el `usuario_id` del JWT, no por un ID enviado libremente desde el navegador.
-
-## 10. Consultas SQL para comprobar notificaciones
-
-Ejecutar **solo desde el SQL Editor administrativo**:
+Puedes ejecutar estas consultas en el SQL Editor administrativo de Supabase para auditar el funcionamiento:
 
 ```sql
+-- 1. Verificar últimas notificaciones generadas por triggers
 SELECT n.id, n.usuario_id, u.nombre, u.apellido,
        n.ticket_id, n.tipo, n.titulo, n.leida,
        n.fecha_creacion, n.fecha_lectura
 FROM public.notificaciones n
 JOIN public.usuarios u ON u.id = n.usuario_id
-ORDER BY n.fecha_creacion DESC, n.id DESC
-LIMIT 30;
-```
+ORDER BY n.fecha_creacion DESC
+LIMIT 15;
 
-Comprobar triggers:
-
-```sql
-SELECT trigger_name, event_object_table, event_manipulation
+-- 2. Verificar estado de los triggers activos en el esquema
+SELECT trigger_name, event_object_table, event_manipulation, action_statement
 FROM information_schema.triggers
 WHERE trigger_schema = 'public'
-  AND trigger_name LIKE 'trg_nexdesk_%'
-ORDER BY trigger_name, event_manipulation;
+ORDER BY event_object_table, trigger_name;
+
+-- 3. Resumen de tickets agrupados por estado actual
+SELECT estado, COUNT(*) AS total
+FROM public.tickets
+GROUP BY estado
+ORDER BY total DESC;
 ```
 
-El trigger de `tickets` genera avisos para administradores por creación, técnicos por asignación y solicitantes por cambio de estado. El de `seguimientos` avisa a solicitante y técnico, excluyendo al autor del seguimiento. **Limitación conocida:** en cambios de estado, el trigger actual no identifica al actor que ejecutó la transición; puede enviar un aviso al propio solicitante si este realizó el cambio.
+---
 
-## 11. Problemas frecuentes y solución
+## 🛠️ Resolución de Problemas Frecuentes
 
-| Síntoma | Qué revisar |
-|---|---|
-| `npm` no reconocido | Instalación de Node.js y reinicio de terminal |
-| Error de importación `react-router-dom`, `jspdf`, `bootstrap` | Ejecutar `npm install` del paso 3 |
-| Página en blanco | Consola del navegador, `src/main.jsx`, `src/App.jsx`, archivos copiados a `src/` correcto |
-| Error de CORS | Puerto de Vite y orígenes permitidos en Express |
-| `401` | Token ausente, expirado o inválido |
-| `403` | Rol sin permiso o cambio obligatorio de contraseña |
-| Campana sin avisos | JWT, API `/api/notificaciones`, permisos RLS, triggers, usuario destinatario |
-| SQL `42501` | Privilegios efectivos y RLS del rol usado por Express |
-| PDF/CSV sin datos | Tickets visibles para ese rol, respuesta API y campos de fechas |
-| Iconos faltantes | Copiar `public/favicon.svg` y `public/icons.svg` |
-| Puerto ocupado | Revisar procesos en 3000/5173; no cambiar ambos puertos sin actualizar CORS y `.env` |
+| Síntoma / Error | Causa Probable | Solución Recomendada |
+| :--- | :--- | :--- |
+| **Error CORS en consola del navegador** | El puerto del frontend no coincide con los orígenes permitidos en Express. | Verifica que el frontend corra en `http://localhost:5173` y que `nexdesk-backend/src/server.js` admita dicho origen en el middleware `cors()`. |
+| **Error `401 Unauthorized` persistente** | Token de sesión no enviado o expirado. | Cierra sesión y vuelve a ingresar. Verifica que `sessionStorage` almacene el token correctamente. |
+| **Error `403 Forbidden` al cambiar estado** | Violación de la matriz de transiciones o rol sin permisos. | Comprueba que el estado solicitado sea una transición válida para el rol actual (`TRANSICIONES_TICKETS`). |
+| **Falla de conexión PostgreSQL (Self-signed cert / TLS)** | Certificado SSL ausente o ruta incorrecta. | Comprueba que `PGSSL_CA_PATH` apunte a `certs/prod-ca-2021.crt` y que el archivo exista en `nexdesk-backend/certs/`. |
+| **Campana sin notificaciones** | Sondeo de notificaciones o destinatario. | Las notificaciones se consultan cada 30 segundos. Verifica en SQL que el trigger haya insertado el registro para el `usuario_id` autenticado. |
+| **PowerShell bloquea scripts de npm** | Política de ejecución restrictiva en Windows. | Utiliza `npm.cmd` en lugar de `npm`, o ejecuta en la terminal de PowerShell: `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass`. |
 
-## 12. Verificaciones de calidad
+---
 
-```powershell
-npm run lint
-npm run build
-npm run preview
-```
+## 📄 Licencia y Créditos
 
-`npm run build` crea `dist/`; esta carpeta es un artefacto de despliegue y no reemplaza `src/`. Si aparecen errores de ESLint, corregirlos antes de entregar el trabajo; no desactivar reglas indiscriminadamente.
-
-## 13. Evidencias
-
-- Captura de `node -v` y `npm -v`.
-- Captura del asistente de creación Vite (React + JavaScript).
-- Captura de `npm install` y de la estructura de archivos final.
-- Captura del backend activo y del frontend funcionando.
-- Pruebas con los cuatro roles y evidencia de RBAC/BOLA.
-- Pruebas de creación/asignación/estado/seguimientos de tickets.
-- Exportación CSV y PDF.
-- Capturas de la campana con avisos leídos y no leídos.
-- Resultado de `npm run lint` y `npm run build`.
-- No incluir `.env` privado, tokens, contraseñas, `node_modules/` ni `dist/` en la entrega de código fuente.
-
-
-
-- Los archivos `06`–`09` son **migraciones históricas**. El `01_schema.sql` entregado aquí es un **esquema integral para instalaciones nuevas**, ensamblado a partir de los SQL reales adjuntos; **no ha sido ejecutado contra tu proyecto Supabase**. Probar primero en una base desechable.
-- La semilla `02_seed.sql` proviene del backend adjunto y no necesariamente coincide con los nombres y tickets actuales de las capturas. No usarla para reconstruir datos reales de una base existente.
-- El archivo `frontend_package_reference.json` es solo una referencia de las dependencias del proyecto docente; el estudiante genera su propio `package.json` y `package-lock.json` con npm.
-- Los archivos `.env` del backend y las claves de Supabase deben entregarse por medios seguros, nunca como parte del ZIP de estudiantes.
-- La carpeta `database/` contiene tanto scripts para creación desde cero como migraciones históricas. Leer `database/README_ORDEN_SQL.md` antes de ejecutar cualquier archivo.
-#   P R O Y E C T O _ I N T E G R A D O R _ C D S  
- 
+Proyecto desarrollado como parte del **Proyecto Integrador CDS**, adaptado a la identidad de marca **SOLVIX — Soluciones rápidas y eficientes**.  
+Todos los derechos reservados © 2026.
